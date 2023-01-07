@@ -13,20 +13,20 @@ Players alternate turns placing a stone of their color on an empty intersection.
   
 2. CURRENT STATUS  
   
-The game plays a pretty decent game of Gomoku on Hard AI.  The medium and easy modes can be very easy - good for younger kids.  If left at a menu or splash screen, the game will time-out and return to the splash screen from where it will start a demo mode.  The demo mode is just two AIs of random skill playing against one-another.
+The game plays a decent game of Gomoku on Hard AI.  The medium and easy modes can be very easy - good for younger kids.  If left at a menu or splash screen, the game will time-out and return to the splash screen from where it will start a demo mode.  The demo mode is just two AIs of random skill playing against one-another.
 
 3. KEYS
   
 The game does have help, but in general the keys are:  
-`WASD or Cursor keys to navigate menu's and the cursor on the board  
-`ENTER or SPACE to select/change a menu item, or place a piece  
-`U to Undo the last move (but not the winning move)  
-`R to Redo a move that was Un-done  
-`ESC to back up  
+    WASD or Cursor keys to navigate menu's and the cursor on the board  
+    ENTER or SPACE to select/change a menu item, or place a piece  
+    U to Undo the last move (but not the winning move)  
+    R to Redo a move that was Un-done  
+    ESC to back up  
   
 4. TECHNICAL DETAILS  
   
-The game is written to be easy to port.  The Windows Command port is an example of such a port.  All the game code is seperate from the platform code.  In the src folder are port folders, such as apple2.  The apple2 specific version lives there.  The plat_* functions need to be implemented for any port.  The win-cmd port has one file, derived from the apple 2 version and is an example of how to make a port.  
+The game is written to be easy to port.  The Windows Command port is an example of such a port.  All the game code is separate from the platform code.  In the src folder are port folders, such as apple2.  The apple2 specific version lives there.  The plat_* functions need to be implemented for any port.  The win-cmd port has one file, derived from the apple 2 version and is an example of how to make a port.  
   
     │   Makefile-dsk.mk        - Uses apple commander to make an apple2 .dsk file  
     │  
@@ -36,12 +36,12 @@ The game is written to be easy to port.  The Windows Command port is an example 
     └───src                    - Platform independent files live here  
         │   globals.h          - Types/structures and global variables visible to platform also  
         │   main.c             - The game code - logic AI etc  
-        │   plat.h             - The platform specific function defenitions shared by independent code  
+        │   plat.h             - The platform specific function definitions     shared by independent code  
         │  
         ├───apple2             - Apple 2 port specific code  
         │       assembly.s     - Mainly drawing code in ASM for speed purposes  
-        │       data.c         - Defenition of tile and font data  
-        │       data.h         - Declaration of data to be used by plat-a2.c  
+        │       data.c         - Definition of tile and font data  
+        │       data.h         - Definition of data to be used by plat-a2.c  
         │       decomp.s       - LZSA decompression Copyright (C) 2019 Emmanuel Marty  
         │       gomoku.cfg     - cc65 config file  
         │       Gomoku.lzh     - Gomoku splash screen LZSA compressed  
@@ -53,35 +53,35 @@ The game is written to be easy to port.  The Windows Command port is an example 
 The windows version works in cmd.exe but works better in PowerShell because it uses the ASCII codes to do color (works in both) and clear screen ("\x1b[2J\x1b[H" works only in PowerShell, not in CMD.exe).  The windows version is not at all sophisticated, it's a proof of concept, and it also shows the "score board" the AI uses to think, and I used that to debug the undo code.  I may make ports to more machines, and these will sit alongside apple2 and win-cmd.  I should not have to change main.c or plat.c again.  
 
 Note to self:  To make the Gomoku.lzh I used the following on a 24BPP BMP of 280x192:  
-`b2d.exe Gomoku.bmp gomuku hgr  
-`lzsa -r -f2 GOMOKUC.BIN Gomoku.lzh  
+    b2d.exe Gomoku.bmp gomuku hgr  
+    lzsa -r -f2 GOMOKUC.BIN Gomoku.lzh  
   
 5. THE AI - HOW IT THINKS  
   
-The AI is actually quite simple.  For any cell, I look at the neighbours and count lines of same-color neighbours in the 8 directions from a cell.  The length of the line leading from a cell indexes into this array to give a score:  
-`0,1,3,7,23,0  
+The AI is actually quite simple.  For any cell, I look at the neighbors and count lines of same-color neighbors in the 8 directions from a cell.  The length of the line leading from a cell indexes into this array to give a score:  
+    0,1,3,7,23,0  
 If the line ends in a space, additional score is given by indexing into this array:  
-`0,1,2,8,32  
-All of the scores are summed and that's the value of the tile.  As an exmaple, where W represensts white and B represents black, the following happens at X:  
-`W  
-` W  
-` BX  
+    0,1,2,8,32  
+All of the scores are summed and that's the value of the tile.  As an example, where W represents white and B represents black, the following happens at X:  
+    W  
+     W  
+     BX  
 X will get 3 points for a length of 2 whites and will get 1 point for the black.  Since the black has a space on the other side, it will also get 1 point for the space, for a total value of 3+1+1=5.  
 The only other situation worth explaining is when a line is broken up by one space, for example:  
-`ZABBXCY  
+    ZABBXCY  
 If A is played as Black, and C is also black, and X, Y and Z are spaces, the score at X will be C+B+B+A+Z, or length 4 (23) + space Z (at length 4, so 32) for a total of 23+32 = 55 (0x37 in the win-cmd display).  The space at Y does not score.  Perhaps it should?  
   
-For skill level, the game randomly picks 3 moves from the highest, second highest and third higest value squares.  If the skill level is hard, the game will play the chosen highest scoring move.  On medium, the game will randomly choose the highest or second higest tile and on easy it will randomly choose between all three the selected tiles.  In easy, and medium sometimes, the game will thus make very bad choices.  On hard the game does well, but there may very well be exploits.  I did not try to find holes in the AI, I just engaged it as I would play another person, for fun.  
+For skill level, the game randomly picks 3 moves from the highest, second highest and third highest value squares.  If the skill level is hard, the game will play the chosen highest scoring move.  On medium, the game will randomly choose the highest or second highest tile and on easy it will randomly choose between all three the selected tiles.  In easy, and medium sometimes, the game will thus make very bad choices.  On hard the game does well, but there may very well be exploits.  I did not try to find holes in the AI, I just engaged it as I would play another person, for fun.  
   
 6. BUILDING THE GAME  
   
 Using GNU make is the easiest way to build the game.  In the Makefile, near the top is this line:  
-`TARGETS := apple2 win-cmd  
+    TARGETS := apple2 win-cmd  
 To work on just one target, only list that target, or use this command to build just, for example, the apple2 target:  
-`make TARGETS=apple2  
+    make TARGETS=apple2  
 To use AppleCommander to make a .dsk image for the Apple2, and to invoke AppleWin to debug, use:  
-`make dsk test or make TARGETS=apple2 dsk test  
-To use another method of building a disk for the Apple 2, or to use a diferent debugger, modify the Makefile.  More about this Makefile can be found at: https://wiki.cc65.org/doku.php?id=cc65:project_setup  
+    make dsk test or make TARGETS=apple2 dsk test  
+To use another method of building a disk for the Apple 2, or to use a different debugger, modify the Makefile.  More about this Makefile can be found at: https://wiki.cc65.org/doku.php?id=cc65:project_setup  
 
 7. CREDITS  
   
@@ -90,8 +90,8 @@ To use another method of building a disk for the Apple 2, or to use a diferent d
 * Bill Buckels for Bmb2HDR which I used to make the splash screen HGR from my GIMP exported BMP  
 * Everyone involved in the Apple II projects (AppleWin | AppleCommander)  
 * Everyone involved in making the cc65 tools, it's very good  
-
-8. CONTACT 
+  
+8. CONTACT  
 Feel free to contact me at swessels@email.com if you have thoughts or suggestions.  
   
 Thank you  
