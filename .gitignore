@@ -1,0 +1,5 @@
+/.vscode/
+/image/
+/obj/
+/Makefile.options
+/gomoku*
