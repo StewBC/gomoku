@@ -1,5 +1,5 @@
 /.vscode/
-/image/
+/image/*.xcf
 /obj/
 /Makefile.options
 /gomoku*

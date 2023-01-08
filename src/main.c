@@ -3,7 +3,6 @@
   This is free and unencumbered software released into the public domain.
 \*---------------------------------------------------------------------------*/
 
-#include <stdio.h>
 #include <string.h>
 #include "globals.h"
 #include "plat.h"
@@ -504,12 +503,7 @@ void main()
 {
     plat_Init();
     if (!plat_CanQuit())
-    {
         --mainItems.count;
-        // This doesn't work in Windows, but does on the Apple 2
-        // In neither case does it matter since both can quit back to OS
-        helpStrings[2][0] = '\0';
-    }
 
     while(!exitApp)
     {

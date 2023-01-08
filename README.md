@@ -36,6 +36,9 @@ The game is written to be easy to port.  The Windows Command port is an example 
     ├───apple2  
     │       template.dsk       - Blank ProDOS disk which becomes gomoku.dsk  
     │  
+    ├───image                  - Source Art folder  
+    │       Gomoku.bmp         - The splash screen image (280x192 140 expanded to 280)  
+    │  
     └───src                    - Platform independent files live here  
         │   globals.h          - Types/structures and global variables visible to platform also  
         │   main.c             - The game code - logic AI etc  
@@ -53,9 +56,11 @@ The game is written to be easy to port.  The Windows Command port is an example 
         └───win-cmd            - Windows Console (Powershell) port  
                 plat-win-cmd.c - Console platform specific code (menu/draw/etc)  
   
-The windows version works in cmd.exe but works better in PowerShell because it uses the ASCII codes to do color (works in both) and clear screen ("```\x1b[2J\x1b[H```" works only in PowerShell, not in CMD.exe).  The windows version is not at all sophisticated, it's a proof of concept, and it also shows the "score board" the AI uses to think, and I used that to debug the undo code.  I may make ports to more machines, and these will sit alongside apple2 and win-cmd.  I should not have to change main.c or plat.c again.  
+The windows version works in cmd.exe but works better in PowerShell because it uses the ASCII codes to do color (works in both) and clear screen ("```\x1b[2J\x1b[H```" works only in PowerShell, not in CMD.exe).  The windows version is not at all sophisticated, it's a proof of concept, and it also shows the "score board" the AI uses to think, and I used that to debug the undo code.  The windows console has to be user adjusted to fit the contents.  
+  
+I may make ports to more machines, and these will sit alongside apple2 and win-cmd.  I should not have to change any files in the src folder, only files in the src sub-folders for the port being made.  
 
-Note to self:  To make the Gomoku.lzh I used the following on a 24BPP BMP of 280x192:  
+Note to self:  To make the Gomoku.lzh I used the following on the 24BPP BMP of 280x192 in the image folder:  
 ```
     b2d.exe Gomoku.bmp gomuku hgr  
     lzsa -r -f2 GOMOKUC.BIN Gomoku.lzh  
@@ -87,7 +92,7 @@ Using GNU make is the easiest way to build the game.  In the Makefile, near the 
 To work on just one target, only list that target, or use this command to build just, for example, the apple2 target:  
 ```make TARGETS=apple2```  
 To use AppleCommander to make a .dsk image for the Apple2, and to invoke AppleWin to debug, use:  
-```make dsk test or make TARGETS=apple2 dsk test```  
+```make all dsk test or make TARGETS=apple2 all dsk test```  
 To use another method of building a disk for the Apple 2, or to use a different debugger, modify the Makefile.  More about this Makefile can be found at: https://wiki.cc65.org/doku.php?id=cc65:project_setup  
 
 7. CREDITS  
