@@ -41,7 +41,7 @@ ifeq ($(PROGRAM),)
 else 
   NAME := $(PROGRAM)
 endif
-$(NAME).apple2: LDFLAGS += 
+$(NAME).apple2: LDFLAGS += -C apple2-hgr.cfg
 
 # Path to the directory containing C and ASM sources.
 # Default: src
