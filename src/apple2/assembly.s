@@ -12,6 +12,7 @@
 
 PAGE1MEM = $2000
 TILE_HEIGHT = 11
+BOARD_HEIGHT = 15
 
 ;-----------------------------------------------------------------------------
 .segment "HGR"
@@ -23,6 +24,7 @@ TILE_HEIGHT = 11
 _splash_screen:
 .incbin "Gomoku.lzh"
 
+; Tables to look up every pixel row start address
 rowL:
     .repeat $C0, Row
         .byte   Row & $08 << 4 | Row & $C0 >> 1 | Row & $C0 >> 3
@@ -34,7 +36,7 @@ rowH:
     .endrep
 
 times_tile_height:
-    .repeat $11, Row
+    .repeat BOARD_HEIGHT+2, Row
         .byte Row * TILE_HEIGHT
     .endrep
 
@@ -42,44 +44,43 @@ times_tile_height:
 ; font masks
 masksLeft:
 .byte %01111111    ; MSB-BITS-11 White
-.byte %00000000    ;   0-BITS-00 Black
-.byte %11111111    ;   1-BITS-11 White
-.byte %10000000    ;   1-BITS-00 Black
+.byte %00000000    ; 0-BITS-00 Black
+.byte %11111111    ; 1-BITS-11 White
+.byte %10000000    ; 1-BITS-00 Black
 
 masksRight:
 .byte %01111111    ; MSB-BITS-11 White
-.byte %00000000    ;   0-BITS-00 Black
-.byte %11111111    ;   1-BITS-11 White
-.byte %10000000    ;   1-BITS-00 Black
+.byte %00000000    ; 0-BITS-00 Black
+.byte %11111111    ; 1-BITS-11 White
+.byte %10000000    ; 1-BITS-00 Black
 
 ;-----------------------------------------------------------------------------
 .segment "CODE"
 _asm_DetectMachine:
-	sei
-	lda	$c081   ; Read from rom
-	lda	$c081
+    lda	$c081      ; Read from rom
+    lda	$c081
     sec
-    jsr $fe1f   ; Detect the IIgs
+    jsr $fe1f      ; Detect the IIgs
     bcc iigs
-    lda $fbb3   ; Look for a IIc+
-    cmp #6      ; Possibly a IIc+ (or many other IIs)
+    lda $fbb3      ; Look for a IIc+
+    cmp #6         ; Possibly a IIc+ (or many other IIs)
     bne a2
-    lda $fbbf   ; Specific to the IIc+
-    cmp #5      ; when there's a 5 here
+    lda $fbbf      ; Specific to the IIc+
+    cmp #5         ; when there's a 5 here
     bne a2
 iicplus:
-    lda #1      ; return 1 for a IIc+
+    lda #1         ; return 1 for a IIc+
     bne :+
 iigs:
-    lda #3      ; return 3 for a IIgs
+    lda #3         ; return 3 for a IIgs
     bne :+
 a2:
-    lda #0      ; return 0 for all other IIs
+    lda #0         ; return 0 for all other IIs
 :
-    cli
-    ldx #0      ; cc65 returns are int's so clear hi
+    ldx #0         ; cc65 returns are int's so clear hi
     rts 
 
+;-----------------------------------------------------------------------------
 _asm_ClearHiRes:
     ldy #0
     sty ptr1
@@ -118,7 +119,7 @@ _asm_ShowTile:
     sta tmp1
 
     lda #TILE_HEIGHT
-    sta tmp3       ; tile height 
+    sta tmp3       ; tile height
     ldx #0
 
 loop:
@@ -251,12 +252,12 @@ invert_loop:
 
 ;-----------------------------------------------------------------------------
 _asm_DecompSplash:
-	lda	#<_splash_screen
-	sta	LZSA_SRC+1
-	lda	#>_splash_screen
-	sta	LZSA_SRC+2
-	lda	#<PAGE1MEM
-	sta	LZSA_DST+1
-	lda	#>PAGE1MEM
-	sta	LZSA_DST+2
-	jmp	DECOMPRESS_LZSA2
+    lda	#<_splash_screen
+    sta	LZSA_SRC+1
+    lda	#>_splash_screen
+    sta	LZSA_SRC+2
+    lda	#<PAGE1MEM
+    sta	LZSA_DST+1
+    lda	#>PAGE1MEM
+    sta	LZSA_DST+2
+    jmp	DECOMPRESS_LZSA2
