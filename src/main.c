@@ -39,21 +39,6 @@ MenuItems skills = { 4, "Human    ", "AI Easy  ", "AI Medium", "AI Hard  " };
 ItemChoices mainItemsOptions[] = { {1, &skills}, {2, &skills} };
 Menu mainMenu = { "Gomoku", &mainItems, 2, mainItemsOptions, {3,0} };
 
-// Unformatted help message.  The platform is responsible for formatting this text in a pleasing way
-char* helpStrings[] =
-{
-    "The object of the game is to get exactly five game pieces in a row on a vertical line, a horizontal line, or a diagonal line.",
-    "",
-    "Use WASD or cursor keys to navigate menus or move the selector on the game board.",
-    "",
-    "ENTER or SPACE to place a game piece.",
-    "",
-    "U or R for Undo or Redo.",
-    "",
-    "ESC to quit.",
-};
-const uchar numHelpStrings = sizeof(helpStrings) / sizeof(helpStrings[0]);
-
 /*
  * Show the main menu and returns only when user has decided to play(1) or quit(0),
  * or the menu times out(0) back to the Splash screen

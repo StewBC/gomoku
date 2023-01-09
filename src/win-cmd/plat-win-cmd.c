@@ -24,6 +24,23 @@ const wchar_t* ansiClear = L"\x1b[2J\x1b[H";
 const wchar_t* ansiColors[] = { L"\x1b[37m", L"\x1b[34m", L"\x1b[35m", L"\x1b[36m" };
 enum ANSI_COLORS { ANSI_WHITE, ANSI_BLUE, ANSI_MAGENTA, ANSI_CYAN };
 
+// Help text specific to this platform
+char* helpStrings[] =
+{
+    "The object of the game is to get exactly five game pieces in a row on a",
+    "vertical line, a horizontal line, or a diagonal line.",
+    "",
+    "Use WASD or cursor keys to navigate menus or move the selector on the",
+    "game board.",
+    "",
+    "ENTER or SPACE to place a game piece.",
+    "",
+    "U or R for Undo or Redo.",
+    "",
+    "ESC to quit.",
+};
+const uchar numHelpStrings = sizeof(helpStrings) / sizeof(helpStrings[0]);
+
 /*
  * Could set the console window size, but does nothing
  */
@@ -166,71 +183,20 @@ uchar plat_ShowSplash()
 }
 
 /*
- * Slightly more complicated ShowHelp because the strings are platform independent so
- * format for a 80 col screen by finding wrap points in the strings
- * Since copies need to be made for MSVC, this could be done far more efficiently
+ * Show the pre-canned help text for this platform
  */
 void plat_ShowHelp()
 {
-    uchar i, s, b, e, c, y = 16;
-
-    // MSVC will give a write error when touching globally declared char *[] values, so make copies
-    char** nonconsthelp = (char**)malloc(sizeof(char*) * numHelpStrings);
-    for (i = 0; i < numHelpStrings; i++)
-        nonconsthelp[i] = strdup(helpStrings[i]);
+    uchar i, y = 16;
 
     plat_ClearScreen();
     plat_ShowText(0,7,3,"Gomoku");
-    for(i = 0; i < numHelpStrings; i++)
+    for(i = 0; i < numHelpStrings; i++, y += 8)
     {
-        s = b = e = 0; // start, break and end
-        do
-        {
-            c = nonconsthelp[i][e];
-            // search for a possible line break
-            while(c && c != ' ')
-            {
-                c = nonconsthelp[i][++e];
-            }
-
-            // if not eol and line fits, mark as possible break
-            if(c && e - s <= SCREEN_WIDTH)
-            {
-                b = e++;
-            }
-            else
-            {
-                // eol or line doesn't fit.  if eol and fits, put "break" at eol, else create break
-                if(!c && e - s <= SCREEN_WIDTH)
-                    b = e;
-                else
-                    nonconsthelp[i][b] = '\0';
-                // show this portion of the help
-                plat_ShowText(y, 0, 0, &nonconsthelp[i][s]);
-                y += 8;
-                // if not eol, restore the space
-                if(c)
-                {
-                    nonconsthelp[i][b] = ' ';
-                }
-                else if(b != e)
-                {
-                    // if eol and eol past last break, show the remainder of the text
-                    plat_ShowText(y, 0, 0, &nonconsthelp[i][b+1]);
-                    y += 8;
-                }
-                // start and end of new line right after the last break
-                s = e = ++b;
-            }
-            // Repeat while not eol
-        } while(c);
+        plat_ShowText(y, 0, i < 2 ? 0 : 1, helpStrings[i]);
     }
-    plat_ShowText(183, 0, 1, "Any key to continue");
+    plat_ShowText(183, 0, 2, "Any key to continue");
     plat_ReadKeys(60);
-
-    for (i = 0; i < numHelpStrings; i++)
-        free(nonconsthelp[i]);
-    free(nonconsthelp);
 
     plat_ClearScreen();
 }
@@ -455,19 +421,18 @@ void plat_Winner(uchar winner)
 {
     uchar* blank = "                      ";
 
+    plat_ShowText(14*8, 28, 1-(winner-1), blank);
     if(winner)
     {
         sprintf(string, " Player %d wins in %3d ", winner, sp);
-        plat_ShowText(14*8, 28, 1-(winner-1), blank);
         plat_ShowText(15*8, 28, 1-(winner-1), string);
-        plat_ShowText(16*8, 28, 1-(winner-1), blank);
     }
     else
     {
         plat_ShowText(14*8, 28, 1-(winner-1), blank);
         plat_ShowText(15*8, 28, ANSI_CYAN, "     It is a draw     ");
-        plat_ShowText(16*8, 28, 1-(winner-1), blank);
     }
+    plat_ShowText(16*8, 28, 1-(winner-1), blank);
 }
 
 /*

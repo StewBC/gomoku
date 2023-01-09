@@ -45,7 +45,5 @@ extern uchar playerType[2];
 extern uchar stack[STACK_SIZE];
 extern uchar sp;
 extern schar player, move_y, move_x;
-extern char* helpStrings[];
-extern const uchar numHelpStrings;
 
 #endif // _GLOBALS_H_

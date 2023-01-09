@@ -30,16 +30,44 @@
 #define COLOR_WIDTH         140         /* Pixels horizontal (2 bpp) */
 #define SCREEN_HEIGHT       (SCREEN_HEIGHT_GFX/8)
 
-extern uchar asm_DetectMachine();
-extern void asm_ClearHiRes();
-extern void asm_ShowTile(uchar row, uchar col, const char* even, const char* odd);
-extern void asm_ShowFont(uchar row, uchar col, uchar style, const char* character);
-extern void asm_InvertSquare(uchar row, uchar col);
-extern void asm_DecompSplash();
+extern uchar __fastcall__ asm_DetectMachine();
+extern void  __fastcall__ asm_ClearHiRes();
+extern void  __fastcall__ asm_ShowTile(uchar row, uchar col, const char* even, const char* odd);
+extern void  __fastcall__ asm_ShowFont(uchar row, uchar col, uchar style, const char* character);
+extern void  __fastcall__ asm_InvertSquare(uchar row, uchar col);
+extern void  __fastcall__ asm_DecompSplash();
 
-extern uchar splash_screen[8192];
-char string[40];
+// String to hold dynamic display strings (sprintf dest)
+char string[21];
 plat_TimeType current_time = 0, current_ticks = 0, time_scale = 800;
+
+// Help text specific to the Apple 2
+char* helpStrings[] =
+{
+    "The object of the",
+    "game is to get",
+    "exactly five game ",
+    "pieces in a row on",
+    "a vertical line, a",
+    "horizontal line, or",
+    "a diagonal line.",
+    "",
+    "Use WASD or cursor",
+    "keys to navigate",
+    "menus or move the",
+    "selector on the",
+    "game board.",
+    "",
+    "ENTER or SPACE to",
+    "place a game piece.",
+    "",
+    "U or R for Undo or",
+    "Redo.",
+    "",
+    "ESC to quit.",
+};
+const uchar numHelpStrings = sizeof(helpStrings) / sizeof(helpStrings[0]);
+
 
 /*
  * Graphics mode, page 1
@@ -133,60 +161,19 @@ uchar plat_ShowSplash()
 }
 
 /*
- * Slightly more complicated ShowHelp because the strings are platform independent so
- * format for a 20 col apple screen by finding wrap points in the strings
+ * Show the prepared help text for the apple 2
  */
 void plat_ShowHelp()
 {
-    uchar i, s, b, e, c, y = 16;
+    uchar i, y = 16;
 
     plat_ClearScreen();
     plat_ShowText(0,7,3,"Gomoku");
-    for(i = 0; i < numHelpStrings; i++)
+    for(i = 0; i < numHelpStrings; i++, y += 8)
     {
-        s = b = e = 0; // start, break and end
-        do
-        {
-            c = helpStrings[i][e];
-            // search for a possible line break
-            while(c && c != ' ')
-            {
-                c = helpStrings[i][++e];
-            }
-
-            // if not eol and line fits, mark as possible break
-            if(c && e - s <= 20)
-            {
-                b = e++;
-            }
-            else
-            {
-                // eol or line doesn't fit.  if eol and fits, put "break" at eol, else create break
-                if(!c && e - s <= 20)
-                    b = e;
-                else
-                    helpStrings[i][b] = '\0';
-                // show this portion of the help
-                plat_ShowText(y, 0, 0, &helpStrings[i][s]);
-                y += 8;
-                // if not eol, restore the space
-                if(c)
-                {
-                    helpStrings[i][b] = ' ';
-                }
-                else if(b != e)
-                {
-                    // if eol and eol past last break, show the remainder of the text
-                    plat_ShowText(y, 0, 0, &helpStrings[i][b+1]);
-                    y += 8;
-                }
-                // start and end of new line right after the last break
-                s = e = ++b;
-            }
-            // Repeat while not eol
-        } while(c);
+        plat_ShowText(y, 0, i < 7 ? 0 : 1, helpStrings[i]);
     }
-    plat_ShowText(183, 0, 1, "Any key to continue");
+    plat_ShowText(183, 0, 2, "Any key to continue ");
     plat_ReadKeys(60);
     plat_ClearScreen();
 }
@@ -390,7 +377,7 @@ void plat_Winner(uchar winner)
     }
     else
     {
-        plat_ShowText(4, 3, 3, "It is a draw ");
+        plat_ShowText(4, 0, 3, "    It is a draw    ");
     }
 }
 
