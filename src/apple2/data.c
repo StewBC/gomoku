@@ -25,7 +25,7 @@ const char tileData[ODD_WHITE+1][TILE_HEIGHT] =
 };
 
 /*
- * White text baked into a green background, 2 bytes per row (even/odd), 8 rows per character
+ * White text (2 bpp), 2 bytes per row (even/odd), 8 rows per character
  */
 const char fontData[][16] =
 {
