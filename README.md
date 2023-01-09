@@ -14,7 +14,9 @@ Players alternate turns placing a stone of their color on an empty intersection.
 2. CURRENT STATUS  
   
 The game plays a decent game of Gomoku on Hard AI.  The medium and easy modes can be very easy - good for younger kids.  If left at a menu or splash screen, the game will time-out and return to the splash screen from where it will start a demo mode.  The demo mode is just two AIs of random skill playing against one-another.
-
+  
+There is a video on YouTube showing off this version of the game: https://youtu.be/DXCzEaSm4S0  
+  
 3. KEYS
   
 The game does have help, but in general the keys are:  
