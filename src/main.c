@@ -172,47 +172,58 @@ void Calculate()
     lineLength = 0;
     GetLineLength();
     // If it ends not in a space it is a different color, or off the board,
-    // so end there (not the example scenario)
-    if (nextPiece)
-        return;
-
-    // Remeber the length and spot (Z)
-    outLine = lineLength;
-    y1 = y;
-    x1 = x;
-    // The color of the neighbour - first piece in the line
-    color = piece ? piece : player + 1;
-
-    // Check if this spot where it ended splits a color line by stepping one more (to V)
-    y += dy;
-    x += dx;
-
-    // If still on the board, and still the same color, get the score for that "row"
-    // as it it was adjacent (so score V). Z is more valuable because of V, consider that
-    if (y < BOARD_Y && x < BOARD_X && color == board[y][x])
+    // so no space to update, but if it is a space, update it
+    if (!nextPiece)
     {
+        // Remeber the length and spot (Z)
+        outLine = lineLength;
+        y1 = y;
+        x1 = x;
+        // The color of the neighbour - first piece in the line
+        color = piece ? piece : player + 1;
+
+        // Check if this spot where it ended splits a color line by stepping one more (to V)
+        y += dy;
+        x += dx;
+
+        // If still on the board, and still the same color, get the score for that "row"
+        // as it it was adjacent (so score V). Z is more valuable because of V, consider that
+        if (y < BOARD_Y && x < BOARD_X && color == board[y][x])
+        {
+            GetLineLength();
+        }
+
+        // Fix this spot on the score board (Z is/was thus score as though V is, where Z is)
+        scoreBoard[y1][x1] -= lineScore[lineLength] + (nextPiece ? 0 : blankScore[lineLength]);
+
+        // Get the length of the V portion alone, and remeber it
+        lineLength -= outLine;
+        outLine = lineLength;
+
+        // Turn back to the piece that was played (X)
+        dy = -dy;
+        dx = -dx;
+        // and step, from Z to the adjacent Y
+        y = y1 + dy;
+        x = x1 + dx;
+        // Score the line back over X
+        GetLineLength();
+        // and that's the score at Z. If a tile on the line, past X is blank, add a blank score
+        scoreBoard[y1][x1] += lineScore[lineLength] + (nextPiece ? 0 : blankScore[lineLength]);
+        // Get the actual line length from Z to X, without the V length
+        lineLength -= outLine;
+    }
+    else if(piece == player+1)
+    {
+        // If the line is the same color as the piece played, make sure this wasn't perhaps a winning move
+        // so add the piece and check the line to the other side of the piece as well
+        lineLength++;
+        dy = -dy;
+        dx = -dx;
+        y = move_y + dy;
+        x = move_x + dx;
         GetLineLength();
     }
-
-    // Fix this spot on the score board (Z is/was thus score as though V is, where Z is)
-    scoreBoard[y1][x1] -= lineScore[lineLength] + (nextPiece ? 0 : blankScore[lineLength]);
-
-    // Get the length of the V portion alone, and remeber it
-    lineLength -= outLine;
-    outLine = lineLength;
-
-    // Turn back to the piece that was played (X)
-    dy = -dy;
-    dx = -dx;
-    // and step, from Z to the adjacent Y
-    y = y1 + dy;
-    x = x1 + dx;
-    // Score the line back over X
-    GetLineLength();
-    // and that's the score at Z. If a tile on the line, past X is blank, add a blank score
-    scoreBoard[y1][x1] += lineScore[lineLength] + (nextPiece ? 0 : blankScore[lineLength]);
-    // Get the actual line length from Z to X, without the V length
-    lineLength -= outLine;
     // If that is 5, this move was a winner
     if (5 == lineLength)
         winner = 1;
