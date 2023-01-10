@@ -45,14 +45,13 @@ The game is written to be easy to port.  The Windows Command port is an example 
     └───src                    - Platform independent files live here  
         │   globals.h          - Types/structures and global variables visible to platform also  
         │   main.c             - The game code - logic AI etc  
-        │   plat.h             - The platform specific function definitions     shared by independent code  
+        │   plat.h             - The platform specific function definitions, shared by independent code  
         │  
         ├───apple2             - Apple 2 port specific code  
         │       assembly.s     - Mainly drawing code in ASM for speed purposes  
         │       data.c         - Definition of tile and font data  
         │       data.h         - Definition of data to be used by plat-a2.c  
         │       decomp.s       - LZSA decompression Copyright (C) 2019 Emmanuel Marty  
-        │       gomoku.cfg     - cc65 config file  
         │       Gomoku.lzh     - Gomoku splash screen LZSA compressed  
         │       plat-a2.c      - Apple 2 platform specific code (menu/draw/etc)  
         │  
