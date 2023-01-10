@@ -10,9 +10,10 @@
 uchar board[BOARD_Y][BOARD_X];      // The visible board
 uchar scoreBoard[BOARD_Y][BOARD_X]; // The AI scoring board
 uchar playerType[2];                // 0 = Human, 1 = easy, 2 = med, 3 = hard AI
-uchar stack[STACK_SIZE];            // Undo / Redo stack
-uchar sp;                           // index into stack, increases as moves are made
-uchar spMax;                        // max index in stack (top for redo)
+uchar moveStack[STACK_SIZE];        // Undo / Redo Stack for board
+uchar scoreStack[STACK_SIZE];       // Undo / Redo stack for scoreBoard
+uchar sp;                           // index into moveStack, increases as moves are made
+uchar spMax;                        // max index in moveStack (top for redo)
 schar player;                       // 0 or 1 take turns
 schar move_y;                       // Where a piece is placed, undo/redo happens, Y (row)
 schar move_x;                       // X (column)
@@ -124,6 +125,7 @@ void GetLineLength()
     // At the edge of the board, y/x could already be off the board
     if (!(y < BOARD_Y && x < BOARD_X))
     {
+        piece = 0;
         nextPiece = 3;  // dummy value
         return;
     }
@@ -187,14 +189,13 @@ void Calculate()
 
     // If still on the board, and still the same color, get the score for that "row"
     // as it it was adjacent (so score V). Z is more valuable because of V, consider that
-    if (color && y < BOARD_Y && x < BOARD_X && color == board[y][x])
+    if (y < BOARD_Y && x < BOARD_X && color == board[y][x])
     {
         GetLineLength();
     }
 
     // Fix this spot on the score board (Z is/was thus score as though V is, where Z is)
-    // X was blank, for sure, so add the blank
-    scoreBoard[y1][x1] -= lineScore[lineLength] + blankScore[lineLength];
+    scoreBoard[y1][x1] -= lineScore[lineLength] + (nextPiece ? 0 : blankScore[lineLength]);
 
     // Get the length of the V portion alone, and remeber it
     lineLength -= outLine;
@@ -238,10 +239,11 @@ void UpdateNeighbours()
  */
 void MakeMove()
 {
+    scoreStack[sp] = scoreBoard[move_y][move_x];
     board[move_y][move_x] = player + 1;
     scoreBoard[move_y][move_x] = 0;
     UpdateNeighbours();
-    stack[sp++] = (move_y << 4) | move_x;
+    moveStack[sp++] = (move_y << 4) | move_x;
     if(spMax < sp)
         spMax = sp;
 }
@@ -265,8 +267,9 @@ void UndoUpdateLine()
     lineLength = 0;
     GetLineLength();
 
-    // The score where X is removed gets this score
-    scoreBoard[move_y][move_x] += lineScore[lineLength] + (nextPiece ? 0 : blankScore[lineLength]);
+    // The score where X is removed doesn't get this score, because if there's a neighbour
+    // accross (ie leftmost Y in example), this score would be incorrect at this point
+    // Use the scoreStack instead to avoid having to undo a more complicated mechanism
 
     // If it ends not in a space it is a different color, or off the board,
     // so end there (not the example scenario)
@@ -286,11 +289,11 @@ void UndoUpdateLine()
 
     // If still on the board, and still the same color, get the score for that "row"
     // as it it was adjacent (so score V)
-    if (color && y < BOARD_Y && x < BOARD_X && color == board[y][x])
+    if (y < BOARD_Y && x < BOARD_X && color == board[y][x])
         GetLineLength();
 
-    // Where X was is a blank for sure, so add the blank, and this is the score at Z
-    scoreBoard[y1][x1] += lineScore[lineLength] + blankScore[lineLength];
+    // Add the blank as well, if there is one
+    scoreBoard[y1][x1] += lineScore[lineLength] + (nextPiece ? 0 : blankScore[lineLength]);
 
     // Start only with the length of the V side line
     lineLength -= outLine;
@@ -324,7 +327,7 @@ void UndoUpdate()
 }
 
 /*
- * Retrieves the last move from the undo stack, and removes it from the board.  Switches
+ * Retrieves the last move from the undo moveStack, and removes it from the board.  Switches
  * to the other player and redraws the log
  */
 void UndoMove()
@@ -333,8 +336,8 @@ void UndoMove()
     {
         // Get the last (previous move)
         --sp;
-        move_y = stack[sp] >> 4;
-        move_x = stack[sp] & 0x0f;
+        move_y = moveStack[sp] >> 4;
+        move_x = moveStack[sp] & 0x0f;
         // Flip the player back to the player that played this move
         player ^= 1;
         // Update the scores with the piece gone
@@ -343,21 +346,22 @@ void UndoMove()
         UndoUpdate();
         // Finally remove the piece from the board, show changes and switch to other player
         board[move_y][move_x] = 0;
+        scoreBoard[move_y][move_x] = scoreStack[sp];
         plat_ShowMove();
         plat_LogMove();
     }
 }
 
 /*
- * Playes the next move in the undo/redo stack, redraws the log and switches to the other player
+ * Playes the next move in the undo/redo moveStack, redraws the log and switches to the other player
  */
 void RedoMove()
 {
     if(sp < spMax)
     {
         // extract the "current" move
-        move_y = stack[sp] >> 4;
-        move_x = stack[sp] & 0x0f;
+        move_y = moveStack[sp] >> 4;
+        move_x = moveStack[sp] & 0x0f;
         // Make the move (this advances sp to the "next" move)
         MakeMove();
         plat_ShowMove();
@@ -445,7 +449,10 @@ uchar GetMove(uchar AI)
 
                 case INPUT_SELECT:
                     if(!board[uy][ux])
+                    {
+                        spMax = sp;
                         exitWhile = 1;
+                    }
                     break;
 
                 case INPUT_UNDO:
@@ -501,7 +508,7 @@ void main()
             plat_SeedRandom();
             memset(board, 0, BOARD_Y*BOARD_X*sizeof(uchar));
             memset(scoreBoard, 0, BOARD_Y*BOARD_X*sizeof(uchar));
-            memset(stack, 0, STACK_SIZE*sizeof(uchar));
+            memset(moveStack, 0, STACK_SIZE*sizeof(uchar));
             sp = spMax = player = quitGame = winner = 0;
             ux = move_x = (BOARD_X/2);
             uy = move_y = (BOARD_Y/2);

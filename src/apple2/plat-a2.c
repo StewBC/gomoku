@@ -356,7 +356,7 @@ void plat_LogMove()
 
     while(start < sp)
     {
-        uchar move = stack[start];
+        uchar move = moveStack[start];
         sprintf(string, "%c%c", 'a'+(move >> 4), 'A'+(move & 0x0f));
         color ^= 1;
         plat_ShowText(row*8, 18, color, string);

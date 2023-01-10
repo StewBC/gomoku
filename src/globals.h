@@ -42,7 +42,7 @@ typedef struct
 // Global variables that are also needed by the platform specific code
 extern uchar board[BOARD_Y][BOARD_X];
 extern uchar playerType[2];
-extern uchar stack[STACK_SIZE];
+extern uchar moveStack[STACK_SIZE];
 extern uchar sp;
 extern schar player, move_y, move_x;
 
