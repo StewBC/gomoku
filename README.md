@@ -3,6 +3,7 @@ The game of Gomoku written for 8-bit computers using cc65
   
 0. UPDATES  
 Jan 7, 2023 - Initial Version - Apple 2 and Windows Console (Powershell)  
+Jan 10, 2023 - V1.1 - Fixed issues with Undo and sometimes detecting a win correctly.
   
 1. INTRODUCTION  
   
