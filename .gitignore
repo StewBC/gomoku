@@ -1,5 +1,7 @@
+/.vs/
 /.vscode/
 /image/*.xcf
 /obj/
 /Makefile.options
 /gomoku*
+/x64/
