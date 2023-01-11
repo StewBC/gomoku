@@ -216,13 +216,15 @@ void Calculate()
     else if(piece == player+1)
     {
         // If the line is the same color as the piece played, make sure this wasn't perhaps a winning move
-        // so add the piece and check the line to the other side of the piece as well
+        // so add the piece and check the line to the other side of the piece as well, and if
+        // it's the same color, count that segment as well
         lineLength++;
         dy = -dy;
         dx = -dx;
         y = move_y + dy;
         x = move_x + dx;
-        GetLineLength();
+        if(player + 1 == board[y][x])
+            GetLineLength();
     }
     // If that is 5, this move was a winner
     if (5 == lineLength)
