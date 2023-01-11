@@ -16,7 +16,7 @@
 #define SCREEN_WIDTH        80
 
 const char show[3] = {' ','B','W'};
-char string[40];
+char string[41];
 plat_TimeType current_time = 0, current_ticks = 0, time_scale = 800;
 WORD seconds = 0;
 extern uchar scoreBoard[BOARD_Y][BOARD_X];
@@ -68,7 +68,7 @@ uchar plat_CanQuit()
  */
 void plat_SeedRandom()
 {
-    srand(time(NULL));
+    srand((int)time(NULL));
 }
 
 /*
@@ -212,7 +212,7 @@ uchar plat_Menu(Menu* m, uchar timeout)
     uchar yTop = ((SCREEN_HEIGHT - (spacingY * m->menuItems->count)) / 2);
     plat_TimeType now = plat_TimeGet();
 
-    plat_ShowText(4,(20-strlen(m->Title))/2, 0, m->Title);
+    plat_ShowText(4,(20-(uchar)strlen(m->Title))/2, 0, m->Title);
 
     y = yTop;
     for(i =0; i < m->menuItems->count; i++)
@@ -229,7 +229,7 @@ uchar plat_Menu(Menu* m, uchar timeout)
         y += spacingY;
     }
 
-    plat_ShowText(yTop*8, 1+strlen(m->menuItems->MenuItems[0]), 1, "");
+    plat_ShowText(yTop*8, 1+(uchar)strlen(m->menuItems->MenuItems[0]), 1, "");
     while(1)
     {
         int keyMask = plat_ReadKeys(timeout);
@@ -406,7 +406,7 @@ void plat_LogMove()
     while(start < sp)
     {
         uchar move = moveStack[start];
-        sprintf(string, "%c%c", 'a'+(move >> 4), 'A'+(move & 0x0f));
+        sprintf_s(string, 40, "%c%c", 'a'+(move >> 4), 'A'+(move & 0x0f));
         color ^= 1;
         plat_ShowText(row*8, LOG_X, color, string);
         row++;
@@ -424,7 +424,7 @@ void plat_Winner(uchar winner)
     plat_ShowText(14*8, 28, 1-(winner-1), blank);
     if(winner)
     {
-        sprintf(string, " Player %d wins in %3d ", winner, sp);
+        sprintf_s(string, 40, " Player %d wins in %3d ", winner, sp);
         plat_ShowText(15*8, 28, 1-(winner-1), string);
     }
     else
