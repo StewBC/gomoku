@@ -12,13 +12,13 @@
 #include "data.h"
 
 // System locations
-#define VIC_BASE_RAM			(0xC000)
-#define BITMAP_OFFSET			(0x0000)
-#define SCREEN_RAM				((char*)VIC_BASE_RAM + 0x2000)
-#define CHARMAP_RAM				((char*)VIC_BASE_RAM + 0x2800)
+#define VIC_BASE_RAM            (0xC000)
+#define BITMAP_OFFSET           (0x0000)
+#define SCREEN_RAM              ((char*)VIC_BASE_RAM + 0x2000)
+#define CHARMAP_RAM             ((char*)VIC_BASE_RAM + 0x2800)
 
-#define SCREEN_WIDTH			40
-#define SCREEN_HEIGHT			25
+#define SCREEN_WIDTH            40
+#define SCREEN_HEIGHT           25
 
 // assembly external function prototypes.  See .s files
 extern void  __fastcall__ asm_ClearScreen();
@@ -115,10 +115,10 @@ void plat_Init()
 void plat_Shutdown()
 {
     VIC.bordercolor = sc_vbc;
-    VIC.ctrl2		= sc_ct2;
-    VIC.ctrl1		= sc_ct1;
-    VIC.addr		= sc_vad;
-    CIA2.pra		= sc_pra;
+    VIC.ctrl2       = sc_ct2;
+    VIC.ctrl1       = sc_ct1;
+    VIC.addr        = sc_vad;
+    CIA2.pra        = sc_pra;
 
     // Switch back to uppercase
     __asm__("lda #142");
@@ -509,27 +509,32 @@ int plat_ReadKeys(uchar timeout)
     key = cgetc();
     switch(key)
     {
-        case 145:		// Up
+        case 87:        // w
+        case 145:       // Up
             keyMask |= INPUT_UP;
         break;
 
-        case 29:		// Right
+        case 68:        //d
+        case 29:        // Right
             keyMask |= INPUT_RIGHT;
         break;
 
-        case 17:		// Down
+        case 83:        // s
+        case 17:        // Down
             keyMask |= INPUT_DOWN;
         break;
 
-        case 157:		// Left
+        case 65:        // a
+        case 157:       // Left
             keyMask |= INPUT_LEFT;
         break;
         
-        case 3:			// Run Stop
+        case 3:         // Run Stop
             keyMask |= INPUT_ESCAPE;
         break;
 
-        case 13:		// Enter
+        case 32:        // Space
+        case 13:        // Enter
             keyMask |= INPUT_SELECT;
         break;
         
