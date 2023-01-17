@@ -59,11 +59,11 @@ EMUCMD :=
 # In such case, please set the variable below to point to directory containing
 # VICE emulators. 
 #VICE_HOME := "C:/Program Files/WinVICE-2.2-x86/"
-VICE_HOME :=
-CX16_HOME :=
-AWIN_HOME :=
-ORIC_HOME :=
-ATARI_HOME :=
+VICE_HOME ?=
+CX16_HOME ?=
+AWIN_HOME ?=
+ORIC_HOME ?=
+ATARI_HOME ?=
 
 # Options state file name. You should not need to change this, but for those
 # rare cases when you feel you really need to name it differently - here you are
