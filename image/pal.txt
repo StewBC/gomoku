@@ -1,0 +1,8 @@
+00C924=0
+000000=1
+FFFFFF=2
+EA5EF3=3
+green=0
+black=1
+white=2
+purple=3

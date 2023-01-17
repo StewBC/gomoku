@@ -9,7 +9,7 @@
 
 # Space or comma separated list of cc65 supported target platforms to build for.
 # Default: c64 (lowercase!)
-TARGETS := apple2 win-cmd
+TARGETS := apple2 c64 win-cmd
 
 # Name of the final, single-file executable.
 # Default: name of the current dir with target name appended
@@ -58,20 +58,12 @@ EMUCMD :=
 # On Windows machines VICE emulators may not be available in the PATH by default.
 # In such case, please set the variable below to point to directory containing
 # VICE emulators. 
-#VICE_HOME := "C:\Program Files\WinVICE-2.2-x86\"
+#VICE_HOME := "C:/Program Files/WinVICE-2.2-x86/"
 VICE_HOME :=
-#APPLEWIN_HOME := c:\users\swessels\apps\applewin
-
-# Optional commands used before starting the emulation process, and after finishing it.
-# Default: none
-# Examples
-#PREEMUCMD := osascript -e "tell application \"System Events\" to set isRunning to (name of processes) contains \"X11.bin\"" -e "if isRunning is true then tell application \"X11\" to activate"
-#PREEMUCMD := osascript -e "tell application \"X11\" to activate"
-#POSTEMUCMD := osascript -e "tell application \"System Events\" to tell process \"X11\" to set visible to false"
-#POSTEMUCMD := osascript -e "tell application \"Terminal\" to activate"
-PREEMUCMD := -"C:\Program Files\Git\usr\bin\sed.exe" "s/^al \([[0-9A-F]\+\)\ \./\1 /g" $(NAME).apple2.lbl > $(APPLEWIN_HOME)/A2_USER1.SYM
-POSTEMUCMD :=
-
+CX16_HOME :=
+AWIN_HOME :=
+ORIC_HOME :=
+ATARI_HOME :=
 
 # Options state file name. You should not need to change this, but for those
 # rare cases when you feel you really need to name it differently - here you are
@@ -154,7 +146,7 @@ TARGETOBJDIR := $(OBJDIR)/$(TARGETS)
 
 # Default emulator commands and options for particular targets.
 # Set EMUCMD to override.
-c64_EMUCMD := $(VICE_HOME)x64 -kernal kernal -VICIIdsize -autoload
+c64_EMUCMD := $(VICE_HOME)x64 -kernal kernal -VICIIdsize -autostart $(PROGRAM).c64
 c128_EMUCMD := $(VICE_HOME)x128 -kernal kernal -VICIIdsize -autoload
 vic20_EMUCMD := $(VICE_HOME)xvic -kernal kernal -VICdsize -autoload
 pet_EMUCMD := $(VICE_HOME)xpet -Crtcdsize -autoload
@@ -163,9 +155,10 @@ plus4_EMUCMD := $(VICE_HOME)xplus4 -TEDdsize -autoload
 c16_EMUCMD := $(VICE_HOME)xplus4 -ramsize 16 -TEDdsize -autoload
 cbm510_EMUCMD := $(VICE_HOME)xcbm2 -model 510 -VICIIdsize -autoload
 cbm610_EMUCMD := $(VICE_HOME)xcbm2 -model 610 -Crtcdsize -autoload
-atari_EMUCMD := atari800 -windowed -xl -pal -nopatchall -run
-cx16_EMUCMD := x16emu -run -prg
-apple2_EMUCMD := $(APPLEWIN_HOME)\AppleWin.exe -d1 $(CURDIR)\$(NAME).dsk
+atari_EMUCMD := $(ATARI_HOME)Altirra64 /defprofile:800 /disk 
+cx16_EMUCMD := $(CX16_HOME)x16emu -run -prg
+apple2_EMUCMD := $(AWIN_HOME)AppleWin.exe -d1 $(PROGRAM).po
+atmos_EMUCMD := $(ORIC_HOME)Oricutron.exe -t 
 
 ifeq ($(EMUCMD),)
   EMUCMD = $($(CC65TARGET)_EMUCMD)

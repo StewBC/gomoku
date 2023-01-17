@@ -2,8 +2,9 @@
 The game of Gomoku written for 8-bit computers using cc65  
   
 0. UPDATES  
-Jan 7, 2023 - Initial Version - Apple 2 and Windows Console (Powershell)  
-Jan 10, 2023 - V1.1 - Fixed issues with Undo and sometimes detecting a win correctly.
+Jan 7, 2023 - Initial Version - Apple 2 and Windows Console (Powershell).  
+Jan 10, 2023 - V1.1 - Fixed issues with Undo and sometimes detecting a win correctly.  
+Jan 17, 2023 - C64 port - Reports wins wrong - issue around sprintf to be resolved.  
   
 1. INTRODUCTION  
   
@@ -55,6 +56,15 @@ The game is written to be easy to port.  The Windows Command port is an example 
         │       Gomoku.lzh     - Gomoku splash screen LZSA compressed  
         │       plat-a2.c      - Apple 2 platform specific code (menu/draw/etc)  
         │  
+        ├───c64                - Commodore 64 port specific code  
+        │       data.c         - Pieces and 16 bit wide Multicolor font  
+        │       data.h  
+        │       decomp.s  
+        │       gomoku.cfg     - Only needed for -D,__HIMEM__=$C000. Not working on command line?
+        │       Gomoku.lzh  
+        │       hiresC64.s     - Uses the C64 Multicolor highres mode (160x200)  
+        │       platC64.c  
+        |  
         └───win-cmd            - Windows Console (Powershell) port  
                 plat-win-cmd.c - Console platform specific code (menu/draw/etc)  
   
