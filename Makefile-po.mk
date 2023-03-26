@@ -6,9 +6,11 @@ CA ?= cadius
 ifeq ($(shell echo),)
 	CP = cp $1
 	MV = mv
+	RM = rm
 else
 	CP = copy $(subst /,\,$1)
 	MV = ren
+	RM = del
 endif
 
 REMOVES += $(PO)
@@ -17,7 +19,7 @@ REMOVES += $(PO)
 po: $(PO)
 
 $(NAME).system:
-	CP $(subst \,/,$(shell cl65 --print-target-path)/apple2/util/loader.system) $(NAME).system#FF2000
+	$(call CP, $(subst \,/,$(shell cl65 --print-target-path)/apple2/util/loader.system) $(NAME).system#FF2000)
 
 $(PO): $(NAME).apple2 $(NAME).system
 	$(call CP, apple2/template.po $@)
