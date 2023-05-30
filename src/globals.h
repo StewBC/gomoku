@@ -31,7 +31,7 @@ typedef struct
     MenuItems *menuItems;       // and items
     uchar numChoices;           // and some number of items have choices
     ItemChoices *itemChoices;   // and which items have which choices
-    uchar activeChoice[];       // and what are the curently selected choices
+    uchar activeChoice[];       // and what are the currently selected choices
 } Menu;
 
 #define BOARD_X 15          // size of the board
