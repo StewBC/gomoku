@@ -52,7 +52,7 @@ uchar MainMenu()
     {
         plat_ClearScreen();
 
-        // diplaying and processing the menu is platform specific
+        // displaying and processing the menu is platform specific
         if (254 <= (item = plat_Menu(&mainMenu, 45)))
             return 0;
 
@@ -175,7 +175,7 @@ void Calculate()
     // so no space to update, but if it is a space, update it
     if (!nextPiece)
     {
-        // Remeber the length and spot (Z)
+        // Remember the length and spot (Z)
         outLine = lineLength;
         y1 = y;
         x1 = x;
@@ -196,7 +196,7 @@ void Calculate()
         // Fix this spot on the score board (Z is/was thus score as though V is, where Z is)
         scoreBoard[y1][x1] -= lineScore[lineLength] + (nextPiece ? 0 : blankScore[lineLength]);
 
-        // Get the length of the V portion alone, and remeber it
+        // Get the length of the V portion alone, and remember it
         lineLength -= outLine;
         outLine = lineLength;
 
@@ -281,7 +281,7 @@ void UndoUpdateLine()
     GetLineLength();
 
     // The score where X is removed doesn't get this score, because if there's a neighbour
-    // accross (ie leftmost Y in example), this score would be incorrect at this point
+    // across (ie leftmost Y in example), this score would be incorrect at this point
     // Use the scoreStack instead to avoid having to undo a more complicated mechanism
 
     // If it ends not in a space it is a different color, or off the board,
@@ -289,7 +289,7 @@ void UndoUpdateLine()
     if (nextPiece)
         return;
 
-    // Remeber the length and spot (Z)
+    // Remember the length and spot (Z)
     outLine = lineLength;
     y1 = y;
     x1 = x;
@@ -555,7 +555,7 @@ void main()
                 // Go till a winner or the user quits
             } while(!quitGame && !winner);
             
-            // If the user didn't quit then there's a winner ot a draw
+            // If the user didn't quit then there's a winner or a draw
             if (!quitGame)
             {
                 plat_Winner(sp == BOARD_X * BOARD_Y ? 0 : player + 1);

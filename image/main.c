@@ -233,7 +233,7 @@ void dump(const char *filename, unsigned char* bitmap, const int size)
         return;
     }
 
-    // Turn indicies into pixels in visual order
+    // Turn indices into pixels in visual order
     k = 0;
     i = 0;
     while(bitmap[i])

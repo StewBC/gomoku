@@ -120,7 +120,7 @@ def main():
     parser.add_argument('-o', '--output', metavar='asm_file',
                         help='Output asm file name.  If not specified output goes to stdout')
     parser.add_argument('-p', '--palette', metavar='palette_file',
-                        help='The name of a file containing key=value pairs that map palette colours to palette indicies, as used by the game (for example 1=red).')
+                        help='The name of a file containing key=value pairs that map palette colours to palette indices, as used by the game (for example 1=red).')
     parser.add_argument('-n', '--name', required=True,
                         help='The base name of the object in the file as it will appear in the asm file (_data or _mask and _flush or _shift will be added to the name)')
     parser.add_argument('-w', '--width', type=int, required=True,
@@ -128,9 +128,9 @@ def main():
     parser.add_argument('-s', '--skip', type=int,
                         help="Skip every n'th input byte (normally 1 to turn 16-bit values into 8-bit values)")
     parser.add_argument('-b', '--bytesperpixel', metavar="BPP",type=int,
-                        help="The width of the pixel data. Skip runs before bytes are turned into palettes and indicies so alphas can be ignored that way")
+                        help="The width of the pixel data. Skip runs before bytes are turned into palettes and indices so alphas can be ignored that way")
     parser.add_argument('-r', '--remap', nargs='*', action=ParseRemap,
-                        help='Intefer pairs in format a=b that remap pixel palette indicies a in input data to b in output data.  If a palette is used then b can be a descriptive palette name (for example 0=black)')
+                        help='Intefer pairs in format a=b that remap pixel palette indices a in input data to b in output data.  If a palette is used then b can be a descriptive palette name (for example 0=black)')
     parser.add_argument('-d', '--indexed',action='store_true',
                         help="The input file is already in palette index format.")
     args = parser.parse_args()

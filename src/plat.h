@@ -61,7 +61,7 @@ void plat_TimeScale(plat_TimeType aScle);
 uchar plat_TimePassed(plat_TimeType aTime, uchar elapsed);
 // Return true if plat_ReadKeys will not block (so a key was pressed)
 uchar plat_CheckKey();
-// Read a key and turn it into a INPUT_* mask if appropriate.  Return -1 if timout current_time ticks passed
-int plat_ReadKeys(uchar timout);
+// Read a key and turn it into a INPUT_* mask if appropriate.  Return -1 if timeout current_time ticks passed
+int plat_ReadKeys(uchar timeout);
 
 #endif //_PLAT_H_
