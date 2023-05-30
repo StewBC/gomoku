@@ -116,7 +116,7 @@ def main():
 
     parser = argparse.ArgumentParser(description='Process RAW image data into an ORCA/M ready text file ')
     parser.add_argument('-i', '--input', metavar='data_file', required=True,
-                        help='The name of the file containing the RAW image palette indicies')
+                        help='The name of the file containing the RAW image palette indices')
     parser.add_argument('-o', '--output', metavar='asm_file',
                         help='Output asm file name.  If not specified output goes to stdout')
     parser.add_argument('-p', '--palette', metavar='palette_file',
