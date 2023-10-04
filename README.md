@@ -5,6 +5,7 @@ The game of Gomoku written for 8-bit computers using cc65
 Jan 7, 2023 - Initial Version - Apple 2 and Windows Console (Powershell).  
 Jan 10, 2023 - V1.1 - Fixed issues with Undo and sometimes detecting a win correctly.  
 Jan 17, 2023 - C64 port - Reports wins wrong - issue around sprintf to be resolved.  
+Oct 3, 2023 - Commodore Plus4 port - Very similar to the C64 version, but native Plus4.  
   
 1. INTRODUCTION  
   
