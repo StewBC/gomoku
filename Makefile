@@ -9,7 +9,7 @@
 
 # Space or comma separated list of cc65 supported target platforms to build for.
 # Default: c64 (lowercase!)
-TARGETS := apple2 c64 win-cmd
+TARGETS := apple2 c64 plus4 win-cmd
 
 # Name of the final, single-file executable.
 # Default: name of the current dir with target name appended
@@ -146,11 +146,11 @@ TARGETOBJDIR := $(OBJDIR)/$(TARGETS)
 
 # Default emulator commands and options for particular targets.
 # Set EMUCMD to override.
-c64_EMUCMD := $(VICE_HOME)x64 -kernal kernal -VICIIdsize -autostart $(PROGRAM).c64
+c64_EMUCMD := $(VICE_HOME)x64sc -autostart $(PROGRAM).c64
 c128_EMUCMD := $(VICE_HOME)x128 -kernal kernal -VICIIdsize -autoload
 vic20_EMUCMD := $(VICE_HOME)xvic -kernal kernal -VICdsize -autoload
 pet_EMUCMD := $(VICE_HOME)xpet -Crtcdsize -autoload
-plus4_EMUCMD := $(VICE_HOME)xplus4 -TEDdsize -autoload
+plus4_EMUCMD := $(VICE_HOME)xplus4.exe -TEDdsize -autostart $(PROGRAM).plus4
 # So far there is no x16 emulator in VICE (why??) so we have to use xplus4 with -memsize option
 c16_EMUCMD := $(VICE_HOME)xplus4 -ramsize 16 -TEDdsize -autoload
 cbm510_EMUCMD := $(VICE_HOME)xcbm2 -model 510 -VICIIdsize -autoload
