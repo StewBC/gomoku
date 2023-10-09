@@ -15,4 +15,5 @@ REMOVES += $(D64)
 d64: $(D64)
 
 $(D64): $(NAME).c64
-	$(C1541) -format "$(NAME)","01" d64 $(NAME).d64 -attach $(NAME).d64 -write $< $(NAME).prg
+	$(C1541) -format "$(NAME)","01" d64 $(NAME).d64 -attach $(NAME).d64 -write $< $(NAME)
+	$(C1541) -attach $(NAME).d64 -write $< $(NAME).plus4
