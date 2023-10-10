@@ -14,5 +14,6 @@ REMOVES += $(D64)
 .PHONY: d64
 d64: $(D64)
 
-$(D64): $(NAME).c64
-	$(C1541) -format "$(NAME)","01" d64 $(NAME).d64 -attach $(NAME).d64 -write $< $(NAME).prg
+$(D64): $(NAME).c64 $(NAME).plus4
+	$(C1541) -format "$(NAME)","01" d64 $(NAME).d64
+	$(foreach t,$^,$(C1541) -attach $(NAME).d64 -write $t $t$(NEWLINE))
