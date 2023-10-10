@@ -23,7 +23,7 @@ $(NAME).system:
 
 $(PO): $(NAME).apple2 $(NAME).system
 	$(call CP, apple2/template.po $@)
-	$(MV) $(NAME).apple2 $(NAME)#060803
+	$(CP) $(NAME).apple2 $(NAME)#060803
 	$(CA) addfile $(NAME).po /gomoku $(NAME).system#FF2000
 	$(CA) addfile $(NAME).po /gomoku $(NAME)#060803
 	$(RM) $(NAME).system#FF2000
