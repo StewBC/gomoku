@@ -302,30 +302,28 @@ void plat_ShowBoard()
 {
     asm_ShowTile(0, 1, tileData[EVEN_BLANK], tileData[ODD_CORNER_UL]);
     asm_ShowTile(0, 2+BOARD_X, tileData[EVEN_LINE_HORIZONTAL_DIV], tileData[ODD_LINE_DOWN_TOP_HALF]);
-
-    for(move_y = 0; move_y < BOARD_Y; move_y++)
-    {
-        sprintf(string,"%c",'a'+move_y);
-        plat_ShowText((1+move_y)*TILE_HEIGHT, 0, 2, string);
+    asm_ShowTile(1+BOARD_Y, 1        , tileData[EVEN_BLANK]              , tileData[ODD_CORNER_LL]);
+    asm_ShowTile(1+BOARD_Y, 2+BOARD_X, tileData[EVEN_LINE_HORIZONTAL_DIV], tileData[ODD_LINE_DOWN_BOTTOM_HALF]);
+    for(move_y = 0; move_y < BOARD_Y; move_y++) {
         asm_ShowTile(0        , 2+move_y , tileData[EVEN_LINE_HORIZONTAL_DIV], tileData[ODD_CORNER_UL]);
         asm_ShowTile(1+move_y , 1        , tileData[EVEN_BLANK]              , tileData[ODD_LEFT_DOWN_HORIZONTAL_DIV]);
         asm_ShowTile(1+move_y , 2+BOARD_Y, tileData[EVEN_LINE_HORIZONTAL_DIV], tileData[ODD_LINE_DOWN]);
         asm_ShowTile(BOARD_Y+1, 2+move_y , tileData[EVEN_LINE_HORIZONTAL_DIV], tileData[ODD_CORNER_LL]);
-        for(move_x=0; move_x < BOARD_X ; move_x++)
-        {
-            if(board[move_y][move_x])
-            {
-                plat_ShowMove();
-            }
-            else
-            {
-                asm_ShowTile(1+move_y, 2+move_x, tileData[EVEN_LINE_HORIZONTAL_DIV], tileData[ODD_LEFT_DOWN_HORIZONTAL_DIV]);
-            }
+    }
+
+    plat_ShowText(172, 2, 2, "ABCDEFGHIJKLMNO");
+    for(move_y = 0; move_y < BOARD_Y; move_y++)
+    {
+        sprintf(string,"%c",'a'+move_y);
+        plat_ShowText((1+move_y)*TILE_HEIGHT, 0, 2, string);
+        for(move_x=0; move_x < BOARD_X ; move_x++) {
+            asm_ShowTile(1+move_y, 2+move_x, tileData[EVEN_LINE_HORIZONTAL_DIV], tileData[ODD_LEFT_DOWN_HORIZONTAL_DIV]);
         }
     }
-    asm_ShowTile(1+BOARD_Y, 1        , tileData[EVEN_BLANK]              , tileData[ODD_CORNER_LL]);
-    asm_ShowTile(1+BOARD_Y, 2+BOARD_X, tileData[EVEN_LINE_HORIZONTAL_DIV], tileData[ODD_LINE_DOWN_BOTTOM_HALF]);
-    plat_ShowText(172, 2, 2, "ABCDEFGHIJKLMNO");
+
+    move_x = (BOARD_X/2);
+    move_y = (BOARD_Y/2);
+    plat_ShowMove();
 }
 
 /*
