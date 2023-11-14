@@ -159,6 +159,7 @@ atari_EMUCMD := $(ATARI_HOME)Altirra64 /defprofile:800 /disk
 cx16_EMUCMD := $(CX16_HOME)x16emu -run -prg
 apple2_EMUCMD := $(AWIN_HOME)AppleWin.exe -d1 $(PROGRAM).po
 atmos_EMUCMD := $(ORIC_HOME)Oricutron.exe -t 
+win-cmd_EMUCMD := $(PROGRAM).win-cmd
 
 ifeq ($(EMUCMD),)
   EMUCMD = $($(CC65TARGET)_EMUCMD)
@@ -294,9 +295,6 @@ $(TARGETOBJDIR)/%.o: %.c | $(TARGETOBJDIR)
 $(PROGRAM): $(OBJECTS)
 	link.exe /OUT:$@.exe $(OBJECTS)
 
-test: $(PROGRAM)
-	$(PROGRAM)
-
 else # ($(TARGET), win-cmd)
 
 $(TARGETOBJDIR)/%.o: %.c | $(TARGETOBJDIR)
@@ -320,11 +318,12 @@ $(TARGETOBJDIR)/%.o: %.a65 | $(TARGETOBJDIR)
 $(PROGRAM): $(CONFIG) $(OBJECTS) $(LIBS)
 	cl65 -t $(CC65TARGET) $(LDFLAGS) -o $@ $(patsubst %.cfg,-C %.cfg,$^)
 
+endif # ($(TARGET), win-cmd)
+
 test: $(PROGRAM)
 	$(PREEMUCMD)
 	$(EMUCMD)
 	$(POSTEMUCMD)
-endif # ($(TARGET), win-cmd)
 
 clean:
 	$(call RMFILES,$(OBJECTS))
